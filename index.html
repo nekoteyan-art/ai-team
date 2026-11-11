@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>AI Team | Management System</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #101827;
+  color: #f1f5f9;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 { color: #60a5fa; }
+h2 { font-size: 19px; }
+
+p {
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.card {
+  background: #1e293b;
+  padding: 18px;
+  border-radius: 14px;
+  margin: 18px 0;
+}
+
+label {
+  display: block;
+  margin: 15px 0 7px;
+  font-weight: 600;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin: 6px 3px 6px 0;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button.green { background: #15803d; }
+button.gray { background: #475569; }
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #0f172a;
+  padding: 14px;
+  border-radius: 8px;
+  line-height: 1.6;
+  min-height: 100px;
+}
+
+.small {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.member {
+  border-left: 4px solid #3b82f6;
+  padding-left: 12px;
+  margin: 14px 0;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>AI Team</h1>
+<p>Multiple AI Collaboration System</p>
+<p>複数のAIが協力して、より良い結論を導くための管理システム。</p>
+
+<div class="card">
+<h2>01｜相談内容</h2>
+
+<label>相談タイトル</label>
+<input id="title" placeholder="例：今後の資産形成について">
+
+<label>相談分野</label>
+<select id="field">
+<option>総合</option>
+<option>電気・技術</option>
+<option>IT・プログラミング</option>
+<option>経済・投資</option>
+<option>旅行</option>
+<option>健康</option>
+<option>法律</option>
+<option>教育</option>
+<option>仕事・経営</option>
+<option>その他</option>
+</select>
+
+<label>相談内容</label>
+<textarea id="question" placeholder="解決したい問題や条件を入力してください"></textarea>
+
+<label>前回のAI回答・追加情報</label>
+<textarea id="previous" placeholder="前のAIの回答を貼り付けてください"></textarea>
+</div>
+
+<div class="card">
+<h2>02｜AI Team Members</h2>
+
+<div class="member">
+<strong>① Strategic Advisor</strong>
+<p>総合戦略家：課題整理と初期提案</p>
+</div>
+
+<div class="member">
+<strong>② Domain Expert</strong>
+<p>専門家：分野別の専門分析</p>
+</div>
+
+<div class="member">
+<strong>③ Critical Reviewer</strong>
+<p>批判的検証者：問題点・リスクの発見</p>
+</div>
+
+<div class="member">
+<strong>④ Final Judge</strong>
+<p>最終審査員：意見を比較して結論を導く</p>
+</div>
+</div>
+
+<div class="card">
+<h2>03｜Prompt Generator</h2>
+
+<p>担当するAIの役割を選択して、プロンプトを生成する。</p>
+
+<button onclick="generate('strategy')">① 戦略家</button>
+<button onclick="generate('expert')">② 専門家</button>
+<button onclick="generate('critic')">③ 検証者</button>
+<button onclick="generate('final')">④ 最終審査員</button>
+
+<label>生成されたプロンプト</label>
+<pre id="output">ここにプロンプトが表示されます。</pre>
+
+<button onclick="copyPrompt()">プロンプトをコピー</button>
+</div>
+
+<div class="card">
+<h2>04｜Discussion Records</h2>
+
+<label>AIの回答</label>
+<textarea id="answer" placeholder="ChatGPTやClaudeの回答を貼り付けてください"></textarea>
+
+<button class="green" onclick="saveRecord()">回答を保存</button>
+<button class="gray" onclick="showRecords()">履歴を表示</button>
+<button class="gray" onclick="exportRecords()">記録を出力</button>
+
+<div id="records"></div>
+</div>
+
+<div class="card">
+<h2>05｜System Information</h2>
+<p>AI Team Version 1.0</p>
+<p>Manual Collaboration Mode</p>
+<p class="small">API接続なし・ブラウザ内保存方式</p>
+</div>
+
+</div>
+
+<script>
+let currentPrompt = "";
+
+const roles = {
+strategy: "あなたは総合戦略家です。目的、制約、優先順位を整理し、最善の初期案を提示してください。",
+expert: "あなたは分野別の専門家です。専門知識を用いて具体的に分析してください。事実と推測を区別し、不明な点も明示してください。",
+critic: "あなたは批判的検証者です。提案の矛盾、根拠不足、リスク、見落としを検証し、改善案を提示してください。",
+final: "あなたは最終審査員です。これまでの意見を比較し、一致点・相違点・採用案を整理して、実行可能な最終結論を提示してください。"
+};
+
+function generate(role) {
+  const title = document.getElementById("title").value;
+  const field = document.getElementById("field").value;
+  const question = document.getElementById("question").value;
+  const previous = document.getElementById("previous").value;
+
+  if (!question.trim()) {
+    alert("相談内容を入力してください。");
+    return;
+  }
+
+  currentPrompt =
+`あなたはAI Teamのメンバーです。
+
+【担当役割】
+${roles[role]}
+
+【相談タイトル】
+${title || "未設定"}
+
+【相談分野】
+${field}
+
+【相談内容】
+${question}
+
+【これまでの回答】
+${previous || "なし"}
+
+【回答ルール】
+・結論と理由を明確にする
+・事実と推測を区別する
+・不明な情報を勝手に補わない
+・必要に応じて具体的な手順を示す
+・他のAIの意見も批判的に検討する
+
+以上を踏まえて回答してください。`;
+
+  document.getElementById("output").textContent = currentPrompt;
+}
+
+async function copyPrompt() {
+  if (!currentPrompt) {
+    alert("先にプロンプトを生成してください。");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(currentPrompt);
+    alert("コピーしました。");
+  } catch (e) {
+    const area = document.createElement("textarea");
+    area.value = currentPrompt;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    alert("コピーしました。");
+  }
+}
+
+function getRecords() {
+  try {
+    return JSON.parse(localStorage.getItem("aiTeamRecords") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveRecord() {
+  const answer = document.getElementById("answer").value;
+
+  if (!answer.trim()) {
+    alert("AIの回答を入力してください。");
+    return;
+  }
+
+  const records = getRecords();
+
+  records.push({
+    title: document.getElementById("title").value,
+    field: document.getElementById("field").value,
+    question: document.getElementById("question").value,
+    answer: answer,
+    date: new Date().toLocaleString("ja-JP")
+  });
+
+  localStorage.setItem("aiTeamRecords", JSON.stringify(records));
+
+  document.getElementById("answer").value = "";
+  alert("回答を保存しました。");
+}
+
+function showRecords() {
+  const records = getRecords();
+  const area = document.getElementById("records");
+
+  area.replaceChildren();
+
+  if (!records.length) {
+    area.textContent = "保存された記録はありません。";
+    return;
+  }
+
+  records.slice().reverse().forEach(r => {
+    const box = document.createElement("div");
+    box.className = "card";
+
+    const heading = document.createElement("strong");
+    heading.textContent = r.title || "無題";
+
+    const date = document.createElement("p");
+    date.textContent = r.date + " / " + r.field;
+
+    const body = document.createElement("pre");
+    body.textContent = r.answer;
+
+    box.append(heading, date, body);
+    area.appendChild(box);
+  });
+}
+
+function exportRecords() {
+  const records = getRecords();
+
+  if (!records.length) {
+    alert("出力する記録がありません。");
+    return;
+  }
+
+  const content = records.map(r =>
+`【${r.title}】
+日時：${r.date}
+分野：${r.field}
+相談内容：${r.question}
+回答：
+${r.answer}
+`).join("\n------------------------\n");
+
+  const blob = new Blob(
+    ["\uFEFF" + content],
+    {type: "text/plain;charset=utf-8"}
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "ai-team-records.txt";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
