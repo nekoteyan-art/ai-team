@@ -1,360 +1,372 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
-<title>AI Team | Management System</title>
-
-<style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #101827;
-  color: #f1f5f9;
-}
-
-.container {
-  max-width: 800px;
-  margin: auto;
-}
-
-h1 { color: #60a5fa; }
-h2 { font-size: 19px; }
-
-p {
-  color: #cbd5e1;
-  line-height: 1.7;
-}
-
-.card {
-  background: #1e293b;
-  padding: 18px;
-  border-radius: 14px;
-  margin: 18px 0;
-}
-
-label {
-  display: block;
-  margin: 15px 0 7px;
-  font-weight: 600;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #475569;
-  border-radius: 8px;
-  background: #0f172a;
-  color: white;
-  font-size: 16px;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-button {
-  border: none;
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin: 6px 3px 6px 0;
-  background: #2563eb;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-button.green { background: #15803d; }
-button.gray { background: #475569; }
-
-pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  background: #0f172a;
-  padding: 14px;
-  border-radius: 8px;
-  line-height: 1.6;
-  min-height: 100px;
-}
-
-.small {
-  font-size: 12px;
-  color: #94a3b8;
-}
-
-.member {
-  border-left: 4px solid #3b82f6;
-  padding-left: 12px;
-  margin: 14px 0;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Team 管理画面 (クリアボタン付き)</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-color: #238636;
+            --accent-hover: #2ea043;
+            --btn-bg: #21262d;
+            --btn-border: #363b42;
+            --danger-color: #f85149;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 16px;
+            line-height: 1.5;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 1.5rem; margin-bottom: 16px; color: #f0f6fc; display: flex; align-items: center; gap: 8px; }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .card h2 { font-size: 1.1rem; margin-bottom: 12px; color: #f0f6fc; display: flex; justify-content: space-between; align-items: center; }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        label { font-size: 0.9rem; color: var(--text-muted); }
+        .clear-text-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+        .clear-text-btn:hover { text-decoration: underline; }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        textarea { resize: vertical; min-height: 90px; }
+        .btn {
+            background-color: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn:hover { background-color: #30363d; }
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: rgba(240,246,252,0.1);
+            color: #ffffff;
+            width: 100%;
+        }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-danger { color: var(--danger-color); }
+        .output-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .badge {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        .history-body {
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 8px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .history-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    </style>
 </head>
-
 <body>
-<div class="container">
+    <div class="container">
+        <h1>🤖 AI Team 管理画面 <span style="font-size: 0.8rem; color: var(--text-muted);">v2.1</span></h1>
 
-<h1>AI Team</h1>
-<p>Multiple AI Collaboration System</p>
-<p>複数のAIが協力して、より良い結論を導くための管理システム。</p>
+        <!-- 1. 相談の入力 -->
+        <div class="card">
+            <h2>
+                <span>1. 相談の入力</span>
+                <button class="clear-text-btn" onclick="clearInputs('consultTitle', 'consultContent')">🗑️ すべてクリア</button>
+            </h2>
+            <label for="consultTitle">タイトル</label>
+            <input type="text" id="consultTitle" placeholder="例：資産形成の初期ステップについて">
+            
+            <label for="consultCategory">分野</label>
+            <select id="consultCategory">
+                <option value="資産形成・経済">資産形成・経済</option>
+                <option value="電気・制御">電気・制御</option>
+                <option value="IT・プログラミング">IT・プログラミング</option>
+                <option value="ビジネス・戦略">ビジネス・戦略</option>
+                <option value="その他">その他</option>
+            </select>
 
-<div class="card">
-<h2>01｜相談内容</h2>
+            <div class="label-row">
+                <label for="consultContent">相談内容（基本情報や前提条件）</label>
+                <button class="clear-text-btn" onclick="clearElement('consultContent')">✕ 消去</button>
+            </div>
+            <textarea id="consultContent" placeholder="例：年齢、年収、現在の状況や目的など、AIに伝える前提条件を簡潔に入力..."></textarea>
+        </div>
 
-<label>相談タイトル</label>
-<input id="title" placeholder="例：今後の資産形成について">
+        <!-- 2. AIプロンプト生成 -->
+        <div class="card">
+            <h2>2. AIプロンプト生成</h2>
+            <label for="aiRole">役割を選択</label>
+            <select id="aiRole">
+                <option value="1. 総合戦略家 (ChatGPT)">1. 総合戦略家（整理・課題分析・初期提案）</option>
+                <option value="2. 分野別専門家 (ChatGPT/Claude)">2. 分野別専門家（専門的深掘り・実務アドバイス）</option>
+                <option value="3. 批判的検証者 (Claude)">3. 批判的検証者（矛盾・リスク・見落とし指摘）</option>
+                <option value="4. 最終審査員 (ChatGPT)">4. 最終審査員（意見比較・最終結論の提示）</option>
+            </select>
+            
+            <div class="label-row" style="margin-top: 8px;">
+                <label for="prevContext">前回の要点・回答を引き継ぐ場合（任意）</label>
+                <button class="clear-text-btn" onclick="clearElement('prevContext')">✕ 消去</button>
+            </div>
+            <textarea id="prevContext" placeholder="前のAIの回答から、必要な結論や要点だけをここに貼り付けると、次のAIに綺麗に引き継げます..."></textarea>
 
-<label>相談分野</label>
-<select id="field">
-<option>総合</option>
-<option>電気・技術</option>
-<option>IT・プログラミング</option>
-<option>経済・投資</option>
-<option>旅行</option>
-<option>健康</option>
-<option>法律</option>
-<option>教育</option>
-<option>仕事・経営</option>
-<option>その他</option>
-</select>
+            <button class="btn btn-primary" onclick="generatePrompt()">プロンプトを生成する</button>
 
-<label>相談内容</label>
-<textarea id="question" placeholder="解決したい問題や条件を入力してください"></textarea>
+            <label style="margin-top: 12px;">生成されたプロンプト</label>
+            <div id="promptOutput" class="output-box">ここにプロンプトが表示されます...</div>
+            
+            <button class="btn" onclick="copyPrompt()">📋 プロンプトをコピー</button>
+        </div>
 
-<label>前回のAI回答・追加情報</label>
-<textarea id="previous" placeholder="前のAIの回答を貼り付けてください"></textarea>
-</div>
+        <!-- 3. AIの回答記録 -->
+        <div class="card">
+            <h2>
+                <span>3. AIの回答を記録</span>
+                <button class="clear-text-btn" onclick="clearElement('aiResponse')">✕ 消去</button>
+            </h2>
+            <label for="aiResponse">AIからの回答（要点・結論のみをペースト推奨）</label>
+            <textarea id="aiResponse" placeholder="AIの返答から、質問文や不要な選択肢を除いた『回答部分』のみを貼り付け..."></textarea>
+            
+            <button class="btn btn-primary" onclick="saveRecord()">💾 履歴に保存する</button>
+        </div>
 
-<div class="card">
-<h2>02｜AI Team Members</h2>
+        <!-- 4. 議論の履歴 -->
+        <div class="card">
+            <h2>
+                <span>4. 議論の履歴</span>
+                <span id="historyCount" class="badge">0件</span>
+            </h2>
+            <div id="historyList">保存された履歴はありません。</div>
+            <div style="margin-top: 14px; display: flex; gap: 8px;">
+                <button class="btn" onclick="exportText()">📥 まとめてテキスト出力</button>
+                <button class="btn btn-danger" onclick="clearHistory()">🗑️ 履歴をクリア</button>
+            </div>
+        </div>
+    </div>
 
-<div class="member">
-<strong>① Strategic Advisor</strong>
-<p>総合戦略家：課題整理と初期提案</p>
-</div>
+    <script>
+        function clearElement(id) {
+            document.getElementById(id).value = '';
+        }
 
-<div class="member">
-<strong>② Domain Expert</strong>
-<p>専門家：分野別の専門分析</p>
-</div>
+        function clearInputs(titleId, contentId) {
+            if (confirm('タイトルと相談内容をクリアしますか？')) {
+                document.getElementById(titleId).value = '';
+                document.getElementById(contentId).value = '';
+            }
+        }
 
-<div class="member">
-<strong>③ Critical Reviewer</strong>
-<p>批判的検証者：問題点・リスクの発見</p>
-</div>
+        function generatePrompt() {
+            const title = document.getElementById('consultTitle').value.trim();
+            const category = document.getElementById('consultCategory').value;
+            const content = document.getElementById('consultContent').value.trim();
+            const role = document.getElementById('aiRole').value;
+            const prevContext = document.getElementById('prevContext').value.trim();
 
-<div class="member">
-<strong>④ Final Judge</strong>
-<p>最終審査員：意見を比較して結論を導く</p>
-</div>
-</div>
+            if (!content) {
+                alert('相談内容を入力してください。');
+                return;
+            }
 
-<div class="card">
-<h2>03｜Prompt Generator</h2>
+            let roleInstruction = '';
+            if (role.startsWith('1')) {
+                roleInstruction = 'あなたは「総合戦略家」です。以下の相談内容を整理し、課題の分析と初期の戦略的提案を行ってください。';
+            } else if (role.startsWith('2')) {
+                roleInstruction = `あなたは「分野別専門家（${category}分野）」です。以下の相談内容に対して、専門的な視点から詳細な分析と技術的・実務的なアドバイスを行ってください。`;
+            } else if (role.startsWith('3')) {
+                roleInstruction = 'あなたは「批判的検証者」です。以下の相談内容およびこれまでの提案に対する矛盾点、根拠不足、リスク、見落としを厳しく指摘してください。';
+            } else if (role.startsWith('4')) {
+                roleInstruction = 'あなたは「最終審査員」です。これまでの議論や意見を比較・検証し、実行可能で質の高い最終結論を提示してください。';
+            }
 
-<p>担当するAIの役割を選択して、プロンプトを生成する。</p>
+            let prompt = `【AI Team 連携指示書】\n■ 分野: ${category}\n■ テーマ: ${title || '無題'}\n\n■ 今回の役割:\n${roleInstruction}\n\n■ 基本的な相談・前提条件:\n${content}`;
+            
+            if (prevContext) {
+                prompt += `\n\n■ 前段階までの要点・引き継ぎ事項:\n${prevContext}`;
+            }
+            
+            document.getElementById('promptOutput').innerText = prompt;
+        }
 
-<button onclick="generate('strategy')">① 戦略家</button>
-<button onclick="generate('expert')">② 専門家</button>
-<button onclick="generate('critic')">③ 検証者</button>
-<button onclick="generate('final')">④ 最終審査員</button>
+        function copyPrompt() {
+            const text = document.getElementById('promptOutput').innerText;
+            if (!text || text.startsWith('ここにプロンプト')) {
+                alert('コピーするプロンプトがありません。');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                alert('プロンプトをコピーしました！');
+            });
+        }
 
-<label>生成されたプロンプト</label>
-<pre id="output">ここにプロンプトが表示されます。</pre>
+        function saveRecord() {
+            const title = document.getElementById('consultTitle').value.trim() || '無題の相談';
+            const category = document.getElementById('consultCategory').value;
+            const role = document.getElementById('aiRole').value;
+            const response = document.getElementById('aiResponse').value.trim();
 
-<button onclick="copyPrompt()">プロンプトをコピー</button>
-</div>
+            if (!response) {
+                alert('保存するAIの回答を入力してください。');
+                return;
+            }
 
-<div class="card">
-<h2>04｜Discussion Records</h2>
+            const record = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                title,
+                category,
+                role,
+                response
+            };
 
-<label>AIの回答</label>
-<textarea id="answer" placeholder="ChatGPTやClaudeの回答を貼り付けてください"></textarea>
+            let history = JSON.parse(localStorage.getItem('aiTeamHistoryV2') || '[]');
+            history.unshift(record);
+            localStorage.setItem('aiTeamHistoryV2', JSON.stringify(history));
 
-<button class="green" onclick="saveRecord()">回答を保存</button>
-<button class="gray" onclick="showRecords()">履歴を表示</button>
-<button class="gray" onclick="exportRecords()">記録を出力</button>
+            document.getElementById('aiResponse').value = '';
+            document.getElementById('prevContext').value = response; // 次の引き継ぎ用に自動セット
+            loadHistory();
+            alert('履歴に保存しました！次のAIへの引き継ぎ欄に回答をセットしました。');
+        }
 
-<div id="records"></div>
-</div>
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            let history = JSON.parse(localStorage.getItem('aiTeamHistoryV2') || '[]');
+            document.getElementById('historyCount').innerText = history.length + '件';
 
-<div class="card">
-<h2>05｜System Information</h2>
-<p>AI Team Version 1.0</p>
-<p>Manual Collaboration Mode</p>
-<p class="small">API接続なし・ブラウザ内保存方式</p>
-</div>
+            if (history.length === 0) {
+                historyList.innerHTML = '保存された履歴はありません。';
+                return;
+            }
 
-</div>
+            let html = '';
+            history.forEach((item) => {
+                html += `<div class="history-item">
+                    <div class="history-header">
+                        <span>${item.date} | <b>[${item.category}]</b></span>
+                        <span class="badge">${item.role}</span>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.95rem; color: #f0f6fc; margin-bottom: 4px;">${item.title}</div>
+                    <div class="history-body">${item.response}</div>
+                    <div class="history-actions">
+                        <button class="btn" style="padding: 4px 10px; font-size: 0.8rem;" onclick="copyHistoryText(${item.id})">📋 この回答をコピー</button>
+                        <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="deleteRecord(${item.id})">🗑️ 削除</button>
+                    </div>
+                </div>`;
+            });
+            historyList.innerHTML = html;
+        }
 
-<script>
-let currentPrompt = "";
+        function copyHistoryText(id) {
+            let history = JSON.parse(localStorage.getItem('aiTeamHistoryV2') || '[]');
+            const item = history.find(h => h.id === id);
+            if (item) {
+                navigator.clipboard.writeText(item.response).then(() => {
+                    alert('履歴の回答をコピーしました！');
+                });
+            }
+        }
 
-const roles = {
-strategy: "あなたは総合戦略家です。目的、制約、優先順位を整理し、最善の初期案を提示してください。",
-expert: "あなたは分野別の専門家です。専門知識を用いて具体的に分析してください。事実と推測を区別し、不明な点も明示してください。",
-critic: "あなたは批判的検証者です。提案の矛盾、根拠不足、リスク、見落としを検証し、改善案を提示してください。",
-final: "あなたは最終審査員です。これまでの意見を比較し、一致点・相違点・採用案を整理して、実行可能な最終結論を提示してください。"
-};
+        function deleteRecord(id) {
+            if (confirm('この履歴を削除してもよろしいですか？')) {
+                let history = JSON.parse(localStorage.getItem('aiTeamHistoryV2') || '[]');
+                history = history.filter(h => h.id !== id);
+                localStorage.setItem('aiTeamHistoryV2', JSON.stringify(history));
+                loadHistory();
+            }
+        }
 
-function generate(role) {
-  const title = document.getElementById("title").value;
-  const field = document.getElementById("field").value;
-  const question = document.getElementById("question").value;
-  const previous = document.getElementById("previous").value;
+        function clearHistory() {
+            if (confirm('すべての履歴を削除してもよろしいですか？')) {
+                localStorage.removeItem('aiTeamHistoryV2');
+                loadHistory();
+            }
+        }
 
-  if (!question.trim()) {
-    alert("相談内容を入力してください。");
-    return;
-  }
+        function exportText() {
+            let history = JSON.parse(localStorage.getItem('aiTeamHistoryV2') || '[]');
+            if (history.length === 0) {
+                alert('出力する履歴がありません。');
+                return;
+            }
 
-  currentPrompt =
-`あなたはAI Teamのメンバーです。
+            let textData = "=== AI Team 議論・回答履歴 ===\n\n";
+            history.forEach((item, index) => {
+                textData += `[${index + 1}] 日時: ${item.date}\n分野: ${item.category} / 担当: ${item.role}\nタイトル: ${item.title}\n回答:\n${item.response}\n\n----------------------------------------\n\n`;
+            });
 
-【担当役割】
-${roles[role]}
+            const blob = new Blob([textData], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-team-history.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
 
-【相談タイトル】
-${title || "未設定"}
-
-【相談分野】
-${field}
-
-【相談内容】
-${question}
-
-【これまでの回答】
-${previous || "なし"}
-
-【回答ルール】
-・結論と理由を明確にする
-・事実と推測を区別する
-・不明な情報を勝手に補わない
-・必要に応じて具体的な手順を示す
-・他のAIの意見も批判的に検討する
-
-以上を踏まえて回答してください。`;
-
-  document.getElementById("output").textContent = currentPrompt;
-}
-
-async function copyPrompt() {
-  if (!currentPrompt) {
-    alert("先にプロンプトを生成してください。");
-    return;
-  }
-
-  try {
-    await navigator.clipboard.writeText(currentPrompt);
-    alert("コピーしました。");
-  } catch (e) {
-    const area = document.createElement("textarea");
-    area.value = currentPrompt;
-    document.body.appendChild(area);
-    area.select();
-    document.execCommand("copy");
-    area.remove();
-    alert("コピーしました。");
-  }
-}
-
-function getRecords() {
-  try {
-    return JSON.parse(localStorage.getItem("aiTeamRecords") || "[]");
-  } catch (e) {
-    return [];
-  }
-}
-
-function saveRecord() {
-  const answer = document.getElementById("answer").value;
-
-  if (!answer.trim()) {
-    alert("AIの回答を入力してください。");
-    return;
-  }
-
-  const records = getRecords();
-
-  records.push({
-    title: document.getElementById("title").value,
-    field: document.getElementById("field").value,
-    question: document.getElementById("question").value,
-    answer: answer,
-    date: new Date().toLocaleString("ja-JP")
-  });
-
-  localStorage.setItem("aiTeamRecords", JSON.stringify(records));
-
-  document.getElementById("answer").value = "";
-  alert("回答を保存しました。");
-}
-
-function showRecords() {
-  const records = getRecords();
-  const area = document.getElementById("records");
-
-  area.replaceChildren();
-
-  if (!records.length) {
-    area.textContent = "保存された記録はありません。";
-    return;
-  }
-
-  records.slice().reverse().forEach(r => {
-    const box = document.createElement("div");
-    box.className = "card";
-
-    const heading = document.createElement("strong");
-    heading.textContent = r.title || "無題";
-
-    const date = document.createElement("p");
-    date.textContent = r.date + " / " + r.field;
-
-    const body = document.createElement("pre");
-    body.textContent = r.answer;
-
-    box.append(heading, date, body);
-    area.appendChild(box);
-  });
-}
-
-function exportRecords() {
-  const records = getRecords();
-
-  if (!records.length) {
-    alert("出力する記録がありません。");
-    return;
-  }
-
-  const content = records.map(r =>
-`【${r.title}】
-日時：${r.date}
-分野：${r.field}
-相談内容：${r.question}
-回答：
-${r.answer}
-`).join("\n------------------------\n");
-
-  const blob = new Blob(
-    ["\uFEFF" + content],
-    {type: "text/plain;charset=utf-8"}
-  );
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-
-  a.href = url;
-  a.download = "ai-team-records.txt";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-</script>
+        window.onload = loadHistory;
+    </script>
 </body>
 </html>
